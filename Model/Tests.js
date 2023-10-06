@@ -39,11 +39,12 @@ module.exports = class Tests {
     fs.writeFileSync(Tests.dbfile, JSON.stringify(this.db));
     return true;
   }
-
+  
   removeTest(id) {
     if (!this.contains(id)) {
       return false;
     }
+    delete this.db['Tests'][id];
     fs.writeFileSync(Tests.dbfile, JSON.stringify(this.db));
     return true;
   }

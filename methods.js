@@ -77,6 +77,18 @@ const saveFile = (file, path) => {
   });
 };
 
+const ifUploaded = (req, res) => {
+  console.log(req.body);
+  if (fs.existsSync(`${root_dir}/tests/${req.body.id}.xml`)) {
+    console.log('Sent OK');
+    res.sendStatus(200);
+  }
+  else {
+    console.log("Sent not OK");
+    res.sendStatus(400);
+  }
+}
+
 /** */
 const upload = (req, res) => {
   const file = req.files.file;
@@ -156,7 +168,13 @@ const deleteCompleted = (req, res) => {
  */
 const deleteTest = (req, res) => {
   const tests = new Tests();
+  const filePath = `${root_dir}/tests/${req.body.id}.xml`;
+  if (fs.existsSync(filePath)) {
+    fs.unlink(filePath, ()=>{});
+    console.log("Test deleted");
+  }
   if (tests.removeTest(req.body.id)) {
+    console.log("Comleted tests deleted");
     res
       .status(200)
       .send('Тест видалено.');
@@ -167,4 +185,4 @@ const deleteTest = (req, res) => {
     .send("Не вдалося видалити тест.");
 };
 
-module.exports = { download, donwloadCompleted, getList, upload, uploadCompleted, deleteCompleted, deleteTest };
+module.exports = { download, donwloadCompleted, getList, upload, uploadCompleted, deleteCompleted, deleteTest, ifUploaded };
